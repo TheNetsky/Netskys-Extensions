@@ -5718,7 +5718,6 @@ var _Sources = (() => {
     CODE_POINTS2[CODE_POINTS2["SPACE"] = 32] = "SPACE";
     CODE_POINTS2[CODE_POINTS2["EXCLAMATION_MARK"] = 33] = "EXCLAMATION_MARK";
     CODE_POINTS2[CODE_POINTS2["QUOTATION_MARK"] = 34] = "QUOTATION_MARK";
-    CODE_POINTS2[CODE_POINTS2["NUMBER_SIGN"] = 35] = "NUMBER_SIGN";
     CODE_POINTS2[CODE_POINTS2["AMPERSAND"] = 38] = "AMPERSAND";
     CODE_POINTS2[CODE_POINTS2["APOSTROPHE"] = 39] = "APOSTROPHE";
     CODE_POINTS2[CODE_POINTS2["HYPHEN_MINUS"] = 45] = "HYPHEN_MINUS";
@@ -5731,17 +5730,12 @@ var _Sources = (() => {
     CODE_POINTS2[CODE_POINTS2["GREATER_THAN_SIGN"] = 62] = "GREATER_THAN_SIGN";
     CODE_POINTS2[CODE_POINTS2["QUESTION_MARK"] = 63] = "QUESTION_MARK";
     CODE_POINTS2[CODE_POINTS2["LATIN_CAPITAL_A"] = 65] = "LATIN_CAPITAL_A";
-    CODE_POINTS2[CODE_POINTS2["LATIN_CAPITAL_F"] = 70] = "LATIN_CAPITAL_F";
-    CODE_POINTS2[CODE_POINTS2["LATIN_CAPITAL_X"] = 88] = "LATIN_CAPITAL_X";
     CODE_POINTS2[CODE_POINTS2["LATIN_CAPITAL_Z"] = 90] = "LATIN_CAPITAL_Z";
     CODE_POINTS2[CODE_POINTS2["RIGHT_SQUARE_BRACKET"] = 93] = "RIGHT_SQUARE_BRACKET";
     CODE_POINTS2[CODE_POINTS2["GRAVE_ACCENT"] = 96] = "GRAVE_ACCENT";
     CODE_POINTS2[CODE_POINTS2["LATIN_SMALL_A"] = 97] = "LATIN_SMALL_A";
-    CODE_POINTS2[CODE_POINTS2["LATIN_SMALL_F"] = 102] = "LATIN_SMALL_F";
-    CODE_POINTS2[CODE_POINTS2["LATIN_SMALL_X"] = 120] = "LATIN_SMALL_X";
     CODE_POINTS2[CODE_POINTS2["LATIN_SMALL_Z"] = 122] = "LATIN_SMALL_Z";
-    CODE_POINTS2[CODE_POINTS2["REPLACEMENT_CHARACTER"] = 65533] = "REPLACEMENT_CHARACTER";
-  })(CODE_POINTS = CODE_POINTS || (CODE_POINTS = {}));
+  })(CODE_POINTS || (CODE_POINTS = {}));
   var SEQUENCES = {
     DASH_DASH: "--",
     CDATA_START: "[CDATA[",
@@ -5829,7 +5823,7 @@ var _Sources = (() => {
     ERR2["misplacedStartTagForHeadElement"] = "misplaced-start-tag-for-head-element";
     ERR2["nestedNoscriptInHead"] = "nested-noscript-in-head";
     ERR2["eofInElementThatCanContainOnlyText"] = "eof-in-element-that-can-contain-only-text";
-  })(ERR = ERR || (ERR = {}));
+  })(ERR || (ERR = {}));
 
   // node_modules/parse5/dist/tokenizer/preprocessor.js
   var DEFAULT_BUFFER_WATERLINE = 1 << 16;
@@ -5857,22 +5851,24 @@ var _Sources = (() => {
     get offset() {
       return this.droppedBufferSize + this.pos;
     }
-    getError(code) {
+    getError(code, cpOffset) {
       const { line, col, offset } = this;
+      const startCol = col + cpOffset;
+      const startOffset = offset + cpOffset;
       return {
         code,
         startLine: line,
         endLine: line,
-        startCol: col,
-        endCol: col,
-        startOffset: offset,
-        endOffset: offset
+        startCol,
+        endCol: startCol,
+        startOffset,
+        endOffset: startOffset
       };
     }
     _err(code) {
       if (this.handler.onParseError && this.lastErrOffset !== this.offset) {
         this.lastErrOffset = this.offset;
-        this.handler.onParseError(this.getError(code));
+        this.handler.onParseError(this.getError(code, 0));
       }
     }
     _addGap() {
@@ -6010,7 +6006,7 @@ var _Sources = (() => {
     TokenType2[TokenType2["DOCTYPE"] = 6] = "DOCTYPE";
     TokenType2[TokenType2["EOF"] = 7] = "EOF";
     TokenType2[TokenType2["HIBERNATION"] = 8] = "HIBERNATION";
-  })(TokenType = TokenType || (TokenType = {}));
+  })(TokenType || (TokenType = {}));
   function getTokenAttr(token, attrName) {
     for (let i = token.attrs.length - 1; i >= 0; i--) {
       if (token.attrs[i].name === attrName) {
@@ -6026,12 +6022,12 @@ var _Sources = (() => {
     ATTRS: () => ATTRS,
     DOCUMENT_MODE: () => DOCUMENT_MODE,
     NS: () => NS,
+    NUMBERED_HEADERS: () => NUMBERED_HEADERS,
     SPECIAL_ELEMENTS: () => SPECIAL_ELEMENTS,
     TAG_ID: () => TAG_ID,
     TAG_NAMES: () => TAG_NAMES,
     getTagID: () => getTagID,
-    hasUnescapedText: () => hasUnescapedText,
-    isNumberedHeader: () => isNumberedHeader
+    hasUnescapedText: () => hasUnescapedText
   });
   var NS;
   (function(NS2) {
@@ -6041,7 +6037,7 @@ var _Sources = (() => {
     NS2["XLINK"] = "http://www.w3.org/1999/xlink";
     NS2["XML"] = "http://www.w3.org/XML/1998/namespace";
     NS2["XMLNS"] = "http://www.w3.org/2000/xmlns/";
-  })(NS = NS || (NS = {}));
+  })(NS || (NS = {}));
   var ATTRS;
   (function(ATTRS2) {
     ATTRS2["TYPE"] = "type";
@@ -6052,13 +6048,13 @@ var _Sources = (() => {
     ATTRS2["COLOR"] = "color";
     ATTRS2["FACE"] = "face";
     ATTRS2["SIZE"] = "size";
-  })(ATTRS = ATTRS || (ATTRS = {}));
+  })(ATTRS || (ATTRS = {}));
   var DOCUMENT_MODE;
   (function(DOCUMENT_MODE2) {
     DOCUMENT_MODE2["NO_QUIRKS"] = "no-quirks";
     DOCUMENT_MODE2["QUIRKS"] = "quirks";
     DOCUMENT_MODE2["LIMITED_QUIRKS"] = "limited-quirks";
-  })(DOCUMENT_MODE = DOCUMENT_MODE || (DOCUMENT_MODE = {}));
+  })(DOCUMENT_MODE || (DOCUMENT_MODE = {}));
   var TAG_NAMES;
   (function(TAG_NAMES2) {
     TAG_NAMES2["A"] = "a";
@@ -6154,6 +6150,7 @@ var _Sources = (() => {
     TAG_NAMES2["RUBY"] = "ruby";
     TAG_NAMES2["S"] = "s";
     TAG_NAMES2["SCRIPT"] = "script";
+    TAG_NAMES2["SEARCH"] = "search";
     TAG_NAMES2["SECTION"] = "section";
     TAG_NAMES2["SELECT"] = "select";
     TAG_NAMES2["SOURCE"] = "source";
@@ -6183,7 +6180,7 @@ var _Sources = (() => {
     TAG_NAMES2["VAR"] = "var";
     TAG_NAMES2["WBR"] = "wbr";
     TAG_NAMES2["XMP"] = "xmp";
-  })(TAG_NAMES = TAG_NAMES || (TAG_NAMES = {}));
+  })(TAG_NAMES || (TAG_NAMES = {}));
   var TAG_ID;
   (function(TAG_ID2) {
     TAG_ID2[TAG_ID2["UNKNOWN"] = 0] = "UNKNOWN";
@@ -6280,36 +6277,37 @@ var _Sources = (() => {
     TAG_ID2[TAG_ID2["RUBY"] = 91] = "RUBY";
     TAG_ID2[TAG_ID2["S"] = 92] = "S";
     TAG_ID2[TAG_ID2["SCRIPT"] = 93] = "SCRIPT";
-    TAG_ID2[TAG_ID2["SECTION"] = 94] = "SECTION";
-    TAG_ID2[TAG_ID2["SELECT"] = 95] = "SELECT";
-    TAG_ID2[TAG_ID2["SOURCE"] = 96] = "SOURCE";
-    TAG_ID2[TAG_ID2["SMALL"] = 97] = "SMALL";
-    TAG_ID2[TAG_ID2["SPAN"] = 98] = "SPAN";
-    TAG_ID2[TAG_ID2["STRIKE"] = 99] = "STRIKE";
-    TAG_ID2[TAG_ID2["STRONG"] = 100] = "STRONG";
-    TAG_ID2[TAG_ID2["STYLE"] = 101] = "STYLE";
-    TAG_ID2[TAG_ID2["SUB"] = 102] = "SUB";
-    TAG_ID2[TAG_ID2["SUMMARY"] = 103] = "SUMMARY";
-    TAG_ID2[TAG_ID2["SUP"] = 104] = "SUP";
-    TAG_ID2[TAG_ID2["TABLE"] = 105] = "TABLE";
-    TAG_ID2[TAG_ID2["TBODY"] = 106] = "TBODY";
-    TAG_ID2[TAG_ID2["TEMPLATE"] = 107] = "TEMPLATE";
-    TAG_ID2[TAG_ID2["TEXTAREA"] = 108] = "TEXTAREA";
-    TAG_ID2[TAG_ID2["TFOOT"] = 109] = "TFOOT";
-    TAG_ID2[TAG_ID2["TD"] = 110] = "TD";
-    TAG_ID2[TAG_ID2["TH"] = 111] = "TH";
-    TAG_ID2[TAG_ID2["THEAD"] = 112] = "THEAD";
-    TAG_ID2[TAG_ID2["TITLE"] = 113] = "TITLE";
-    TAG_ID2[TAG_ID2["TR"] = 114] = "TR";
-    TAG_ID2[TAG_ID2["TRACK"] = 115] = "TRACK";
-    TAG_ID2[TAG_ID2["TT"] = 116] = "TT";
-    TAG_ID2[TAG_ID2["U"] = 117] = "U";
-    TAG_ID2[TAG_ID2["UL"] = 118] = "UL";
-    TAG_ID2[TAG_ID2["SVG"] = 119] = "SVG";
-    TAG_ID2[TAG_ID2["VAR"] = 120] = "VAR";
-    TAG_ID2[TAG_ID2["WBR"] = 121] = "WBR";
-    TAG_ID2[TAG_ID2["XMP"] = 122] = "XMP";
-  })(TAG_ID = TAG_ID || (TAG_ID = {}));
+    TAG_ID2[TAG_ID2["SEARCH"] = 94] = "SEARCH";
+    TAG_ID2[TAG_ID2["SECTION"] = 95] = "SECTION";
+    TAG_ID2[TAG_ID2["SELECT"] = 96] = "SELECT";
+    TAG_ID2[TAG_ID2["SOURCE"] = 97] = "SOURCE";
+    TAG_ID2[TAG_ID2["SMALL"] = 98] = "SMALL";
+    TAG_ID2[TAG_ID2["SPAN"] = 99] = "SPAN";
+    TAG_ID2[TAG_ID2["STRIKE"] = 100] = "STRIKE";
+    TAG_ID2[TAG_ID2["STRONG"] = 101] = "STRONG";
+    TAG_ID2[TAG_ID2["STYLE"] = 102] = "STYLE";
+    TAG_ID2[TAG_ID2["SUB"] = 103] = "SUB";
+    TAG_ID2[TAG_ID2["SUMMARY"] = 104] = "SUMMARY";
+    TAG_ID2[TAG_ID2["SUP"] = 105] = "SUP";
+    TAG_ID2[TAG_ID2["TABLE"] = 106] = "TABLE";
+    TAG_ID2[TAG_ID2["TBODY"] = 107] = "TBODY";
+    TAG_ID2[TAG_ID2["TEMPLATE"] = 108] = "TEMPLATE";
+    TAG_ID2[TAG_ID2["TEXTAREA"] = 109] = "TEXTAREA";
+    TAG_ID2[TAG_ID2["TFOOT"] = 110] = "TFOOT";
+    TAG_ID2[TAG_ID2["TD"] = 111] = "TD";
+    TAG_ID2[TAG_ID2["TH"] = 112] = "TH";
+    TAG_ID2[TAG_ID2["THEAD"] = 113] = "THEAD";
+    TAG_ID2[TAG_ID2["TITLE"] = 114] = "TITLE";
+    TAG_ID2[TAG_ID2["TR"] = 115] = "TR";
+    TAG_ID2[TAG_ID2["TRACK"] = 116] = "TRACK";
+    TAG_ID2[TAG_ID2["TT"] = 117] = "TT";
+    TAG_ID2[TAG_ID2["U"] = 118] = "U";
+    TAG_ID2[TAG_ID2["UL"] = 119] = "UL";
+    TAG_ID2[TAG_ID2["SVG"] = 120] = "SVG";
+    TAG_ID2[TAG_ID2["VAR"] = 121] = "VAR";
+    TAG_ID2[TAG_ID2["WBR"] = 122] = "WBR";
+    TAG_ID2[TAG_ID2["XMP"] = 123] = "XMP";
+  })(TAG_ID || (TAG_ID = {}));
   var TAG_NAME_TO_ID = /* @__PURE__ */ new Map([
     [TAG_NAMES.A, TAG_ID.A],
     [TAG_NAMES.ADDRESS, TAG_ID.ADDRESS],
@@ -6404,6 +6402,7 @@ var _Sources = (() => {
     [TAG_NAMES.RUBY, TAG_ID.RUBY],
     [TAG_NAMES.S, TAG_ID.S],
     [TAG_NAMES.SCRIPT, TAG_ID.SCRIPT],
+    [TAG_NAMES.SEARCH, TAG_ID.SEARCH],
     [TAG_NAMES.SECTION, TAG_ID.SECTION],
     [TAG_NAMES.SELECT, TAG_ID.SELECT],
     [TAG_NAMES.SOURCE, TAG_ID.SOURCE],
@@ -6529,9 +6528,7 @@ var _Sources = (() => {
     [NS.XML]: /* @__PURE__ */ new Set(),
     [NS.XMLNS]: /* @__PURE__ */ new Set()
   };
-  function isNumberedHeader(tn) {
-    return tn === $.H1 || tn === $.H2 || tn === $.H3 || tn === $.H4 || tn === $.H5 || tn === $.H6;
-  }
+  var NUMBERED_HEADERS = /* @__PURE__ */ new Set([$.H1, $.H2, $.H3, $.H4, $.H5, $.H6]);
   var UNESCAPED_TEXT = /* @__PURE__ */ new Set([
     TAG_NAMES.STYLE,
     TAG_NAMES.SCRIPT,
@@ -6546,35 +6543,6 @@ var _Sources = (() => {
   }
 
   // node_modules/parse5/dist/tokenizer/index.js
-  var C1_CONTROLS_REFERENCE_REPLACEMENTS = /* @__PURE__ */ new Map([
-    [128, 8364],
-    [130, 8218],
-    [131, 402],
-    [132, 8222],
-    [133, 8230],
-    [134, 8224],
-    [135, 8225],
-    [136, 710],
-    [137, 8240],
-    [138, 352],
-    [139, 8249],
-    [140, 338],
-    [142, 381],
-    [145, 8216],
-    [146, 8217],
-    [147, 8220],
-    [148, 8221],
-    [149, 8226],
-    [150, 8211],
-    [151, 8212],
-    [152, 732],
-    [153, 8482],
-    [154, 353],
-    [155, 8250],
-    [156, 339],
-    [158, 382],
-    [159, 376]
-  ]);
   var State;
   (function(State3) {
     State3[State3["DATA"] = 0] = "DATA";
@@ -6649,13 +6617,7 @@ var _Sources = (() => {
     State3[State3["CDATA_SECTION_BRACKET"] = 69] = "CDATA_SECTION_BRACKET";
     State3[State3["CDATA_SECTION_END"] = 70] = "CDATA_SECTION_END";
     State3[State3["CHARACTER_REFERENCE"] = 71] = "CHARACTER_REFERENCE";
-    State3[State3["NAMED_CHARACTER_REFERENCE"] = 72] = "NAMED_CHARACTER_REFERENCE";
-    State3[State3["AMBIGUOUS_AMPERSAND"] = 73] = "AMBIGUOUS_AMPERSAND";
-    State3[State3["NUMERIC_CHARACTER_REFERENCE"] = 74] = "NUMERIC_CHARACTER_REFERENCE";
-    State3[State3["HEXADEMICAL_CHARACTER_REFERENCE_START"] = 75] = "HEXADEMICAL_CHARACTER_REFERENCE_START";
-    State3[State3["HEXADEMICAL_CHARACTER_REFERENCE"] = 76] = "HEXADEMICAL_CHARACTER_REFERENCE";
-    State3[State3["DECIMAL_CHARACTER_REFERENCE"] = 77] = "DECIMAL_CHARACTER_REFERENCE";
-    State3[State3["NUMERIC_CHARACTER_REFERENCE_END"] = 78] = "NUMERIC_CHARACTER_REFERENCE_END";
+    State3[State3["AMBIGUOUS_AMPERSAND"] = 72] = "AMBIGUOUS_AMPERSAND";
   })(State || (State = {}));
   var TokenizerMode = {
     DATA: State.DATA,
@@ -6680,26 +6642,28 @@ var _Sources = (() => {
   function isAsciiAlphaNumeric2(cp) {
     return isAsciiLetter(cp) || isAsciiDigit(cp);
   }
-  function isAsciiUpperHexDigit(cp) {
-    return cp >= CODE_POINTS.LATIN_CAPITAL_A && cp <= CODE_POINTS.LATIN_CAPITAL_F;
-  }
-  function isAsciiLowerHexDigit(cp) {
-    return cp >= CODE_POINTS.LATIN_SMALL_A && cp <= CODE_POINTS.LATIN_SMALL_F;
-  }
-  function isAsciiHexDigit(cp) {
-    return isAsciiDigit(cp) || isAsciiUpperHexDigit(cp) || isAsciiLowerHexDigit(cp);
-  }
   function toAsciiLower(cp) {
     return cp + 32;
   }
   function isWhitespace2(cp) {
     return cp === CODE_POINTS.SPACE || cp === CODE_POINTS.LINE_FEED || cp === CODE_POINTS.TABULATION || cp === CODE_POINTS.FORM_FEED;
   }
-  function isEntityInAttributeInvalidEnd2(nextCp) {
-    return nextCp === CODE_POINTS.EQUALS_SIGN || isAsciiAlphaNumeric2(nextCp);
-  }
   function isScriptDataDoubleEscapeSequenceEnd(cp) {
     return isWhitespace2(cp) || cp === CODE_POINTS.SOLIDUS || cp === CODE_POINTS.GREATER_THAN_SIGN;
+  }
+  function getErrorForNumericCharacterReference(code) {
+    if (code === CODE_POINTS.NULL) {
+      return ERR.nullCharacterReference;
+    } else if (code > 1114111) {
+      return ERR.characterReferenceOutsideUnicodeRange;
+    } else if (isSurrogate(code)) {
+      return ERR.surrogateCharacterReference;
+    } else if (isUndefinedCodePoint(code)) {
+      return ERR.noncharacterCharacterReference;
+    } else if (isControlCodePoint(code) || code === CODE_POINTS.CARRIAGE_RETURN) {
+      return ERR.controlCharacterReference;
+    }
+    return null;
   }
   var Tokenizer = class {
     constructor(options, handler) {
@@ -6712,18 +6676,34 @@ var _Sources = (() => {
       this.active = false;
       this.state = State.DATA;
       this.returnState = State.DATA;
-      this.charRefCode = -1;
+      this.entityStartPos = 0;
       this.consumedAfterSnapshot = -1;
       this.currentCharacterToken = null;
       this.currentToken = null;
       this.currentAttr = { name: "", value: "" };
       this.preprocessor = new Preprocessor(handler);
       this.currentLocation = this.getCurrentLocation(-1);
+      this.entityDecoder = new EntityDecoder(decode_data_html_default, (cp, consumed) => {
+        this.preprocessor.pos = this.entityStartPos + consumed - 1;
+        this._flushCodePointConsumedAsCharacterReference(cp);
+      }, handler.onParseError ? {
+        missingSemicolonAfterCharacterReference: () => {
+          this._err(ERR.missingSemicolonAfterCharacterReference, 1);
+        },
+        absenceOfDigitsInNumericCharacterReference: (consumed) => {
+          this._err(ERR.absenceOfDigitsInNumericCharacterReference, this.entityStartPos - this.preprocessor.pos + consumed);
+        },
+        validateNumericCharacterReference: (code) => {
+          const error = getErrorForNumericCharacterReference(code);
+          if (error)
+            this._err(error, 1);
+        }
+      } : void 0);
     }
     //Errors
-    _err(code) {
+    _err(code, cpOffset = 0) {
       var _a2, _b;
-      (_b = (_a2 = this.handler).onParseError) === null || _b === void 0 ? void 0 : _b.call(_a2, this.preprocessor.getError(code));
+      (_b = (_a2 = this.handler).onParseError) === null || _b === void 0 ? void 0 : _b.call(_a2, this.preprocessor.getError(code, cpOffset));
     }
     // NOTE: `offset` may never run across line boundaries.
     getCurrentLocation(offset) {
@@ -6784,7 +6764,8 @@ var _Sources = (() => {
     //Hibernation
     _ensureHibernation() {
       if (this.preprocessor.endOfChunkHit) {
-        this._unconsume(this.consumedAfterSnapshot);
+        this.preprocessor.retreat(this.consumedAfterSnapshot);
+        this.consumedAfterSnapshot = 0;
         this.active = false;
         return true;
       }
@@ -6794,14 +6775,6 @@ var _Sources = (() => {
     _consume() {
       this.consumedAfterSnapshot++;
       return this.preprocessor.advance();
-    }
-    _unconsume(count) {
-      this.consumedAfterSnapshot -= count;
-      this.preprocessor.retreat(count);
-    }
-    _reconsumeInState(state, cp) {
-      this.state = state;
-      this._callState(cp);
     }
     _advanceBy(count) {
       this.consumedAfterSnapshot += count;
@@ -6968,7 +6941,7 @@ var _Sources = (() => {
       this.active = false;
     }
     //Characters emission
-    //OPTIMIZATION: specification uses only one type of character tokens (one token per character).
+    //OPTIMIZATION: The specification uses only one type of character token (one token per character).
     //This causes a huge memory overhead and a lot of unnecessary parser loops. parse5 uses 3 groups of characters.
     //If we have a sequence of characters that belong to the same group, the parser can process it
     //as a single solid character token.
@@ -6978,13 +6951,13 @@ var _Sources = (() => {
     //3)TokenType.CHARACTER - any character sequence which don't belong to groups 1 and 2 (e.g. 'abcdef1234@@#$%^')
     _appendCharToCurrentCharacterToken(type, ch) {
       if (this.currentCharacterToken) {
-        if (this.currentCharacterToken.type !== type) {
+        if (this.currentCharacterToken.type === type) {
+          this.currentCharacterToken.chars += ch;
+          return;
+        } else {
           this.currentLocation = this.getCurrentLocation(0);
           this._emitCurrentCharacterToken(this.currentLocation);
           this.preprocessor.dropParsedChunk();
-        } else {
-          this.currentCharacterToken.chars += ch;
-          return;
         }
       }
       this._createCharacterToken(type, ch);
@@ -6999,39 +6972,11 @@ var _Sources = (() => {
       this._appendCharToCurrentCharacterToken(TokenType.CHARACTER, ch);
     }
     // Character reference helpers
-    _matchNamedCharacterReference(cp) {
-      let result = null;
-      let excess = 0;
-      let withoutSemicolon = false;
-      for (let i = 0, current = decode_data_html_default[0]; i >= 0; cp = this._consume()) {
-        i = determineBranch(decode_data_html_default, current, i + 1, cp);
-        if (i < 0)
-          break;
-        excess += 1;
-        current = decode_data_html_default[i];
-        const masked = current & BinTrieFlags.VALUE_LENGTH;
-        if (masked) {
-          const valueLength = (masked >> 14) - 1;
-          if (cp !== CODE_POINTS.SEMICOLON && this._isCharacterReferenceInAttribute() && isEntityInAttributeInvalidEnd2(this.preprocessor.peek(1))) {
-            result = [CODE_POINTS.AMPERSAND];
-            i += valueLength;
-          } else {
-            result = valueLength === 0 ? [decode_data_html_default[i] & ~BinTrieFlags.VALUE_LENGTH] : valueLength === 1 ? [decode_data_html_default[++i]] : [decode_data_html_default[++i], decode_data_html_default[++i]];
-            excess = 0;
-            withoutSemicolon = cp !== CODE_POINTS.SEMICOLON;
-          }
-          if (valueLength === 0) {
-            this._consume();
-            break;
-          }
-        }
-      }
-      this._unconsume(excess);
-      if (withoutSemicolon && !this.preprocessor.endOfChunkHit) {
-        this._err(ERR.missingSemicolonAfterCharacterReference);
-      }
-      this._unconsume(1);
-      return result;
+    _startCharacterReference() {
+      this.returnState = this.state;
+      this.state = State.CHARACTER_REFERENCE;
+      this.entityStartPos = this.preprocessor.pos;
+      this.entityDecoder.startEntity(this._isCharacterReferenceInAttribute() ? DecodingMode.Attribute : DecodingMode.Legacy);
     }
     _isCharacterReferenceInAttribute() {
       return this.returnState === State.ATTRIBUTE_VALUE_DOUBLE_QUOTED || this.returnState === State.ATTRIBUTE_VALUE_SINGLE_QUOTED || this.returnState === State.ATTRIBUTE_VALUE_UNQUOTED;
@@ -7331,35 +7276,11 @@ var _Sources = (() => {
           break;
         }
         case State.CHARACTER_REFERENCE: {
-          this._stateCharacterReference(cp);
-          break;
-        }
-        case State.NAMED_CHARACTER_REFERENCE: {
-          this._stateNamedCharacterReference(cp);
+          this._stateCharacterReference();
           break;
         }
         case State.AMBIGUOUS_AMPERSAND: {
           this._stateAmbiguousAmpersand(cp);
-          break;
-        }
-        case State.NUMERIC_CHARACTER_REFERENCE: {
-          this._stateNumericCharacterReference(cp);
-          break;
-        }
-        case State.HEXADEMICAL_CHARACTER_REFERENCE_START: {
-          this._stateHexademicalCharacterReferenceStart(cp);
-          break;
-        }
-        case State.HEXADEMICAL_CHARACTER_REFERENCE: {
-          this._stateHexademicalCharacterReference(cp);
-          break;
-        }
-        case State.DECIMAL_CHARACTER_REFERENCE: {
-          this._stateDecimalCharacterReference(cp);
-          break;
-        }
-        case State.NUMERIC_CHARACTER_REFERENCE_END: {
-          this._stateNumericCharacterReferenceEnd(cp);
           break;
         }
         default: {
@@ -7377,8 +7298,7 @@ var _Sources = (() => {
           break;
         }
         case CODE_POINTS.AMPERSAND: {
-          this.returnState = State.DATA;
-          this.state = State.CHARACTER_REFERENCE;
+          this._startCharacterReference();
           break;
         }
         case CODE_POINTS.NULL: {
@@ -7400,8 +7320,7 @@ var _Sources = (() => {
     _stateRcdata(cp) {
       switch (cp) {
         case CODE_POINTS.AMPERSAND: {
-          this.returnState = State.RCDATA;
-          this.state = State.CHARACTER_REFERENCE;
+          this._startCharacterReference();
           break;
         }
         case CODE_POINTS.LESS_THAN_SIGN: {
@@ -8150,8 +8069,7 @@ var _Sources = (() => {
           break;
         }
         case CODE_POINTS.AMPERSAND: {
-          this.returnState = State.ATTRIBUTE_VALUE_DOUBLE_QUOTED;
-          this.state = State.CHARACTER_REFERENCE;
+          this._startCharacterReference();
           break;
         }
         case CODE_POINTS.NULL: {
@@ -8178,8 +8096,7 @@ var _Sources = (() => {
           break;
         }
         case CODE_POINTS.AMPERSAND: {
-          this.returnState = State.ATTRIBUTE_VALUE_SINGLE_QUOTED;
-          this.state = State.CHARACTER_REFERENCE;
+          this._startCharacterReference();
           break;
         }
         case CODE_POINTS.NULL: {
@@ -8210,8 +8127,7 @@ var _Sources = (() => {
           break;
         }
         case CODE_POINTS.AMPERSAND: {
-          this.returnState = State.ATTRIBUTE_VALUE_UNQUOTED;
-          this.state = State.CHARACTER_REFERENCE;
+          this._startCharacterReference();
           break;
         }
         case CODE_POINTS.GREATER_THAN_SIGN: {
@@ -9206,30 +9122,25 @@ var _Sources = (() => {
     }
     // Character reference state
     //------------------------------------------------------------------
-    _stateCharacterReference(cp) {
-      if (cp === CODE_POINTS.NUMBER_SIGN) {
-        this.state = State.NUMERIC_CHARACTER_REFERENCE;
-      } else if (isAsciiAlphaNumeric2(cp)) {
-        this.state = State.NAMED_CHARACTER_REFERENCE;
-        this._stateNamedCharacterReference(cp);
-      } else {
-        this._flushCodePointConsumedAsCharacterReference(CODE_POINTS.AMPERSAND);
-        this._reconsumeInState(this.returnState, cp);
-      }
-    }
-    // Named character reference state
-    //------------------------------------------------------------------
-    _stateNamedCharacterReference(cp) {
-      const matchResult = this._matchNamedCharacterReference(cp);
-      if (this._ensureHibernation()) {
-      } else if (matchResult) {
-        for (let i = 0; i < matchResult.length; i++) {
-          this._flushCodePointConsumedAsCharacterReference(matchResult[i]);
+    _stateCharacterReference() {
+      let length = this.entityDecoder.write(this.preprocessor.html, this.preprocessor.pos);
+      if (length < 0) {
+        if (this.preprocessor.lastChunkWritten) {
+          length = this.entityDecoder.end();
+        } else {
+          this.active = false;
+          this.preprocessor.pos = this.preprocessor.html.length - 1;
+          this.consumedAfterSnapshot = 0;
+          this.preprocessor.endOfChunkHit = true;
+          return;
         }
-        this.state = this.returnState;
-      } else {
+      }
+      if (length === 0) {
+        this.preprocessor.pos = this.entityStartPos;
         this._flushCodePointConsumedAsCharacterReference(CODE_POINTS.AMPERSAND);
-        this.state = State.AMBIGUOUS_AMPERSAND;
+        this.state = !this._isCharacterReferenceInAttribute() && isAsciiAlphaNumeric2(this.preprocessor.peek(1)) ? State.AMBIGUOUS_AMPERSAND : this.returnState;
+      } else {
+        this.state = this.returnState;
       }
     }
     // Ambiguos ampersand state
@@ -9241,92 +9152,9 @@ var _Sources = (() => {
         if (cp === CODE_POINTS.SEMICOLON) {
           this._err(ERR.unknownNamedCharacterReference);
         }
-        this._reconsumeInState(this.returnState, cp);
-      }
-    }
-    // Numeric character reference state
-    //------------------------------------------------------------------
-    _stateNumericCharacterReference(cp) {
-      this.charRefCode = 0;
-      if (cp === CODE_POINTS.LATIN_SMALL_X || cp === CODE_POINTS.LATIN_CAPITAL_X) {
-        this.state = State.HEXADEMICAL_CHARACTER_REFERENCE_START;
-      } else if (isAsciiDigit(cp)) {
-        this.state = State.DECIMAL_CHARACTER_REFERENCE;
-        this._stateDecimalCharacterReference(cp);
-      } else {
-        this._err(ERR.absenceOfDigitsInNumericCharacterReference);
-        this._flushCodePointConsumedAsCharacterReference(CODE_POINTS.AMPERSAND);
-        this._flushCodePointConsumedAsCharacterReference(CODE_POINTS.NUMBER_SIGN);
-        this._reconsumeInState(this.returnState, cp);
-      }
-    }
-    // Hexademical character reference start state
-    //------------------------------------------------------------------
-    _stateHexademicalCharacterReferenceStart(cp) {
-      if (isAsciiHexDigit(cp)) {
-        this.state = State.HEXADEMICAL_CHARACTER_REFERENCE;
-        this._stateHexademicalCharacterReference(cp);
-      } else {
-        this._err(ERR.absenceOfDigitsInNumericCharacterReference);
-        this._flushCodePointConsumedAsCharacterReference(CODE_POINTS.AMPERSAND);
-        this._flushCodePointConsumedAsCharacterReference(CODE_POINTS.NUMBER_SIGN);
-        this._unconsume(2);
         this.state = this.returnState;
+        this._callState(cp);
       }
-    }
-    // Hexademical character reference state
-    //------------------------------------------------------------------
-    _stateHexademicalCharacterReference(cp) {
-      if (isAsciiUpperHexDigit(cp)) {
-        this.charRefCode = this.charRefCode * 16 + cp - 55;
-      } else if (isAsciiLowerHexDigit(cp)) {
-        this.charRefCode = this.charRefCode * 16 + cp - 87;
-      } else if (isAsciiDigit(cp)) {
-        this.charRefCode = this.charRefCode * 16 + cp - 48;
-      } else if (cp === CODE_POINTS.SEMICOLON) {
-        this.state = State.NUMERIC_CHARACTER_REFERENCE_END;
-      } else {
-        this._err(ERR.missingSemicolonAfterCharacterReference);
-        this.state = State.NUMERIC_CHARACTER_REFERENCE_END;
-        this._stateNumericCharacterReferenceEnd(cp);
-      }
-    }
-    // Decimal character reference state
-    //------------------------------------------------------------------
-    _stateDecimalCharacterReference(cp) {
-      if (isAsciiDigit(cp)) {
-        this.charRefCode = this.charRefCode * 10 + cp - 48;
-      } else if (cp === CODE_POINTS.SEMICOLON) {
-        this.state = State.NUMERIC_CHARACTER_REFERENCE_END;
-      } else {
-        this._err(ERR.missingSemicolonAfterCharacterReference);
-        this.state = State.NUMERIC_CHARACTER_REFERENCE_END;
-        this._stateNumericCharacterReferenceEnd(cp);
-      }
-    }
-    // Numeric character reference end state
-    //------------------------------------------------------------------
-    _stateNumericCharacterReferenceEnd(cp) {
-      if (this.charRefCode === CODE_POINTS.NULL) {
-        this._err(ERR.nullCharacterReference);
-        this.charRefCode = CODE_POINTS.REPLACEMENT_CHARACTER;
-      } else if (this.charRefCode > 1114111) {
-        this._err(ERR.characterReferenceOutsideUnicodeRange);
-        this.charRefCode = CODE_POINTS.REPLACEMENT_CHARACTER;
-      } else if (isSurrogate(this.charRefCode)) {
-        this._err(ERR.surrogateCharacterReference);
-        this.charRefCode = CODE_POINTS.REPLACEMENT_CHARACTER;
-      } else if (isUndefinedCodePoint(this.charRefCode)) {
-        this._err(ERR.noncharacterCharacterReference);
-      } else if (isControlCodePoint(this.charRefCode) || this.charRefCode === CODE_POINTS.CARRIAGE_RETURN) {
-        this._err(ERR.controlCharacterReference);
-        const replacement = C1_CONTROLS_REFERENCE_REPLACEMENTS.get(this.charRefCode);
-        if (replacement !== void 0) {
-          this.charRefCode = replacement;
-        }
-      }
-      this._flushCodePointConsumedAsCharacterReference(this.charRefCode);
-      this._reconsumeInState(this.returnState, cp);
     }
   };
 
@@ -9343,31 +9171,25 @@ var _Sources = (() => {
     TAG_ID.THEAD,
     TAG_ID.TR
   ]);
-  var SCOPING_ELEMENT_NS = /* @__PURE__ */ new Map([
-    [TAG_ID.APPLET, NS.HTML],
-    [TAG_ID.CAPTION, NS.HTML],
-    [TAG_ID.HTML, NS.HTML],
-    [TAG_ID.MARQUEE, NS.HTML],
-    [TAG_ID.OBJECT, NS.HTML],
-    [TAG_ID.TABLE, NS.HTML],
-    [TAG_ID.TD, NS.HTML],
-    [TAG_ID.TEMPLATE, NS.HTML],
-    [TAG_ID.TH, NS.HTML],
-    [TAG_ID.ANNOTATION_XML, NS.MATHML],
-    [TAG_ID.MI, NS.MATHML],
-    [TAG_ID.MN, NS.MATHML],
-    [TAG_ID.MO, NS.MATHML],
-    [TAG_ID.MS, NS.MATHML],
-    [TAG_ID.MTEXT, NS.MATHML],
-    [TAG_ID.DESC, NS.SVG],
-    [TAG_ID.FOREIGN_OBJECT, NS.SVG],
-    [TAG_ID.TITLE, NS.SVG]
+  var SCOPING_ELEMENTS_HTML = /* @__PURE__ */ new Set([
+    TAG_ID.APPLET,
+    TAG_ID.CAPTION,
+    TAG_ID.HTML,
+    TAG_ID.MARQUEE,
+    TAG_ID.OBJECT,
+    TAG_ID.TABLE,
+    TAG_ID.TD,
+    TAG_ID.TEMPLATE,
+    TAG_ID.TH
   ]);
-  var NAMED_HEADERS = [TAG_ID.H1, TAG_ID.H2, TAG_ID.H3, TAG_ID.H4, TAG_ID.H5, TAG_ID.H6];
-  var TABLE_ROW_CONTEXT = [TAG_ID.TR, TAG_ID.TEMPLATE, TAG_ID.HTML];
-  var TABLE_BODY_CONTEXT = [TAG_ID.TBODY, TAG_ID.TFOOT, TAG_ID.THEAD, TAG_ID.TEMPLATE, TAG_ID.HTML];
-  var TABLE_CONTEXT = [TAG_ID.TABLE, TAG_ID.TEMPLATE, TAG_ID.HTML];
-  var TABLE_CELLS = [TAG_ID.TD, TAG_ID.TH];
+  var SCOPING_ELEMENTS_HTML_LIST = /* @__PURE__ */ new Set([...SCOPING_ELEMENTS_HTML, TAG_ID.OL, TAG_ID.UL]);
+  var SCOPING_ELEMENTS_HTML_BUTTON = /* @__PURE__ */ new Set([...SCOPING_ELEMENTS_HTML, TAG_ID.BUTTON]);
+  var SCOPING_ELEMENTS_MATHML = /* @__PURE__ */ new Set([TAG_ID.ANNOTATION_XML, TAG_ID.MI, TAG_ID.MN, TAG_ID.MO, TAG_ID.MS, TAG_ID.MTEXT]);
+  var SCOPING_ELEMENTS_SVG = /* @__PURE__ */ new Set([TAG_ID.DESC, TAG_ID.FOREIGN_OBJECT, TAG_ID.TITLE]);
+  var TABLE_ROW_CONTEXT = /* @__PURE__ */ new Set([TAG_ID.TR, TAG_ID.TEMPLATE, TAG_ID.HTML]);
+  var TABLE_BODY_CONTEXT = /* @__PURE__ */ new Set([TAG_ID.TBODY, TAG_ID.TFOOT, TAG_ID.THEAD, TAG_ID.TEMPLATE, TAG_ID.HTML]);
+  var TABLE_CONTEXT = /* @__PURE__ */ new Set([TAG_ID.TABLE, TAG_ID.TEMPLATE, TAG_ID.HTML]);
+  var TABLE_CELLS = /* @__PURE__ */ new Set([TAG_ID.TD, TAG_ID.TH]);
   var OpenElementStack = class {
     get currentTmplContentOrNode() {
       return this._isInTemplate() ? this.treeAdapter.getTemplateContent(this.current) : this.current;
@@ -9459,7 +9281,7 @@ var _Sources = (() => {
       this.shortenToLength(idx < 0 ? 0 : idx);
     }
     popUntilNumberedHeaderPopped() {
-      this.popUntilPopped(NAMED_HEADERS, NS.HTML);
+      this.popUntilPopped(NUMBERED_HEADERS, NS.HTML);
     }
     popUntilTableCellPopped() {
       this.popUntilPopped(TABLE_CELLS, NS.HTML);
@@ -9470,7 +9292,7 @@ var _Sources = (() => {
     }
     _indexOfTagNames(tagNames, namespace) {
       for (let i = this.stackTop; i >= 0; i--) {
-        if (tagNames.includes(this.tagIDs[i]) && this.treeAdapter.getNamespaceURI(this.items[i]) === namespace) {
+        if (tagNames.has(this.tagIDs[i]) && this.treeAdapter.getNamespaceURI(this.items[i]) === namespace) {
           return i;
         }
       }
@@ -9518,102 +9340,117 @@ var _Sources = (() => {
       return this.stackTop === 0 && this.tagIDs[0] === TAG_ID.HTML;
     }
     //Element in scope
-    hasInScope(tagName) {
+    hasInDynamicScope(tagName, htmlScope) {
       for (let i = this.stackTop; i >= 0; i--) {
         const tn = this.tagIDs[i];
-        const ns = this.treeAdapter.getNamespaceURI(this.items[i]);
-        if (tn === tagName && ns === NS.HTML) {
-          return true;
-        }
-        if (SCOPING_ELEMENT_NS.get(tn) === ns) {
-          return false;
+        switch (this.treeAdapter.getNamespaceURI(this.items[i])) {
+          case NS.HTML: {
+            if (tn === tagName)
+              return true;
+            if (htmlScope.has(tn))
+              return false;
+            break;
+          }
+          case NS.SVG: {
+            if (SCOPING_ELEMENTS_SVG.has(tn))
+              return false;
+            break;
+          }
+          case NS.MATHML: {
+            if (SCOPING_ELEMENTS_MATHML.has(tn))
+              return false;
+            break;
+          }
         }
       }
       return true;
+    }
+    hasInScope(tagName) {
+      return this.hasInDynamicScope(tagName, SCOPING_ELEMENTS_HTML);
+    }
+    hasInListItemScope(tagName) {
+      return this.hasInDynamicScope(tagName, SCOPING_ELEMENTS_HTML_LIST);
+    }
+    hasInButtonScope(tagName) {
+      return this.hasInDynamicScope(tagName, SCOPING_ELEMENTS_HTML_BUTTON);
     }
     hasNumberedHeaderInScope() {
       for (let i = this.stackTop; i >= 0; i--) {
         const tn = this.tagIDs[i];
-        const ns = this.treeAdapter.getNamespaceURI(this.items[i]);
-        if (isNumberedHeader(tn) && ns === NS.HTML) {
-          return true;
-        }
-        if (SCOPING_ELEMENT_NS.get(tn) === ns) {
-          return false;
-        }
-      }
-      return true;
-    }
-    hasInListItemScope(tagName) {
-      for (let i = this.stackTop; i >= 0; i--) {
-        const tn = this.tagIDs[i];
-        const ns = this.treeAdapter.getNamespaceURI(this.items[i]);
-        if (tn === tagName && ns === NS.HTML) {
-          return true;
-        }
-        if ((tn === TAG_ID.UL || tn === TAG_ID.OL) && ns === NS.HTML || SCOPING_ELEMENT_NS.get(tn) === ns) {
-          return false;
-        }
-      }
-      return true;
-    }
-    hasInButtonScope(tagName) {
-      for (let i = this.stackTop; i >= 0; i--) {
-        const tn = this.tagIDs[i];
-        const ns = this.treeAdapter.getNamespaceURI(this.items[i]);
-        if (tn === tagName && ns === NS.HTML) {
-          return true;
-        }
-        if (tn === TAG_ID.BUTTON && ns === NS.HTML || SCOPING_ELEMENT_NS.get(tn) === ns) {
-          return false;
+        switch (this.treeAdapter.getNamespaceURI(this.items[i])) {
+          case NS.HTML: {
+            if (NUMBERED_HEADERS.has(tn))
+              return true;
+            if (SCOPING_ELEMENTS_HTML.has(tn))
+              return false;
+            break;
+          }
+          case NS.SVG: {
+            if (SCOPING_ELEMENTS_SVG.has(tn))
+              return false;
+            break;
+          }
+          case NS.MATHML: {
+            if (SCOPING_ELEMENTS_MATHML.has(tn))
+              return false;
+            break;
+          }
         }
       }
       return true;
     }
     hasInTableScope(tagName) {
       for (let i = this.stackTop; i >= 0; i--) {
-        const tn = this.tagIDs[i];
-        const ns = this.treeAdapter.getNamespaceURI(this.items[i]);
-        if (ns !== NS.HTML) {
+        if (this.treeAdapter.getNamespaceURI(this.items[i]) !== NS.HTML) {
           continue;
         }
-        if (tn === tagName) {
-          return true;
-        }
-        if (tn === TAG_ID.TABLE || tn === TAG_ID.TEMPLATE || tn === TAG_ID.HTML) {
-          return false;
+        switch (this.tagIDs[i]) {
+          case tagName: {
+            return true;
+          }
+          case TAG_ID.TABLE:
+          case TAG_ID.HTML: {
+            return false;
+          }
         }
       }
       return true;
     }
     hasTableBodyContextInTableScope() {
       for (let i = this.stackTop; i >= 0; i--) {
-        const tn = this.tagIDs[i];
-        const ns = this.treeAdapter.getNamespaceURI(this.items[i]);
-        if (ns !== NS.HTML) {
+        if (this.treeAdapter.getNamespaceURI(this.items[i]) !== NS.HTML) {
           continue;
         }
-        if (tn === TAG_ID.TBODY || tn === TAG_ID.THEAD || tn === TAG_ID.TFOOT) {
-          return true;
-        }
-        if (tn === TAG_ID.TABLE || tn === TAG_ID.HTML) {
-          return false;
+        switch (this.tagIDs[i]) {
+          case TAG_ID.TBODY:
+          case TAG_ID.THEAD:
+          case TAG_ID.TFOOT: {
+            return true;
+          }
+          case TAG_ID.TABLE:
+          case TAG_ID.HTML: {
+            return false;
+          }
         }
       }
       return true;
     }
     hasInSelectScope(tagName) {
       for (let i = this.stackTop; i >= 0; i--) {
-        const tn = this.tagIDs[i];
-        const ns = this.treeAdapter.getNamespaceURI(this.items[i]);
-        if (ns !== NS.HTML) {
+        if (this.treeAdapter.getNamespaceURI(this.items[i]) !== NS.HTML) {
           continue;
         }
-        if (tn === tagName) {
-          return true;
-        }
-        if (tn !== TAG_ID.OPTION && tn !== TAG_ID.OPTGROUP) {
-          return false;
+        switch (this.tagIDs[i]) {
+          case tagName: {
+            return true;
+          }
+          case TAG_ID.OPTION:
+          case TAG_ID.OPTGROUP: {
+            break;
+          }
+          default: {
+            return false;
+          }
         }
       }
       return true;
@@ -9642,7 +9479,7 @@ var _Sources = (() => {
   (function(EntryType2) {
     EntryType2[EntryType2["Marker"] = 0] = "Marker";
     EntryType2[EntryType2["Element"] = 1] = "Element";
-  })(EntryType = EntryType || (EntryType = {}));
+  })(EntryType || (EntryType = {}));
   var MARKER = { type: EntryType.Marker };
   var FormattingElementList = class {
     constructor(treeAdapter) {
@@ -9742,13 +9579,6 @@ var _Sources = (() => {
   };
 
   // node_modules/parse5/dist/tree-adapters/default.js
-  function createTextNode(value) {
-    return {
-      nodeName: "#text",
-      value,
-      parentNode: null
-    };
-  }
   var defaultTreeAdapter = {
     //Node construction
     createDocument() {
@@ -9778,6 +9608,13 @@ var _Sources = (() => {
       return {
         nodeName: "#comment",
         data: data2,
+        parentNode: null
+      };
+    },
+    createTextNode(value) {
+      return {
+        nodeName: "#text",
+        value,
         parentNode: null
       };
     },
@@ -9835,14 +9672,14 @@ var _Sources = (() => {
           return;
         }
       }
-      defaultTreeAdapter.appendChild(parentNode, createTextNode(text3));
+      defaultTreeAdapter.appendChild(parentNode, defaultTreeAdapter.createTextNode(text3));
     },
     insertTextBefore(parentNode, text3, referenceNode) {
       const prevNode = parentNode.childNodes[parentNode.childNodes.indexOf(referenceNode) - 1];
       if (prevNode && defaultTreeAdapter.isTextNode(prevNode)) {
         prevNode.value += text3;
       } else {
-        defaultTreeAdapter.insertBefore(parentNode, createTextNode(text3), referenceNode);
+        defaultTreeAdapter.insertBefore(parentNode, defaultTreeAdapter.createTextNode(text3), referenceNode);
       }
     },
     adoptAttributes(recipient, attrs) {
@@ -10097,7 +9934,6 @@ var _Sources = (() => {
     ["xlink:show", { prefix: "xlink", name: "show", namespace: NS.XLINK }],
     ["xlink:title", { prefix: "xlink", name: "title", namespace: NS.XLINK }],
     ["xlink:type", { prefix: "xlink", name: "type", namespace: NS.XLINK }],
-    ["xml:base", { prefix: "xml", name: "base", namespace: NS.XML }],
     ["xml:lang", { prefix: "xml", name: "lang", namespace: NS.XML }],
     ["xml:space", { prefix: "xml", name: "space", namespace: NS.XML }],
     ["xmlns", { prefix: "", name: "xmlns", namespace: NS.XMLNS }],
@@ -10351,6 +10187,7 @@ var _Sources = (() => {
       return fragment;
     }
     //Errors
+    /** @internal */
     _err(token, code, beforeToken) {
       var _a2;
       if (!this.onParseError)
@@ -10368,12 +10205,14 @@ var _Sources = (() => {
       this.onParseError(err);
     }
     //Stack events
+    /** @internal */
     onItemPush(node, tid, isTop) {
       var _a2, _b;
       (_b = (_a2 = this.treeAdapter).onItemPush) === null || _b === void 0 ? void 0 : _b.call(_a2, node);
       if (isTop && this.openElements.stackTop > 0)
         this._setContextModes(node, tid);
     }
+    /** @internal */
     onItemPop(node, isTop) {
       var _a2, _b;
       if (this.options.sourceCodeLocationInfo) {
@@ -10397,6 +10236,7 @@ var _Sources = (() => {
       this.currentNotInHTML = !isHTML;
       this.tokenizer.inForeignNode = !isHTML && !this._isIntegrationPoint(tid, current);
     }
+    /** @protected */
     _switchToTextParsing(currentToken, nextTokenizerState) {
       this._insertElement(currentToken, NS.HTML);
       this.tokenizer.state = nextTokenizerState;
@@ -10409,9 +10249,11 @@ var _Sources = (() => {
       this.tokenizer.state = TokenizerMode.PLAINTEXT;
     }
     //Fragment parsing
+    /** @protected */
     _getAdjustedCurrentElement() {
       return this.openElements.stackTop === 0 && this.fragmentContext ? this.fragmentContext : this.openElements.current;
     }
+    /** @protected */
     _findFormInFragmentContext() {
       let node = this.fragmentContext;
       while (node) {
@@ -10453,6 +10295,7 @@ var _Sources = (() => {
       }
     }
     //Tree mutation
+    /** @protected */
     _setDocumentType(token) {
       const name = token.name || "";
       const publicId = token.publicId || "";
@@ -10466,6 +10309,7 @@ var _Sources = (() => {
         }
       }
     }
+    /** @protected */
     _attachElementToTree(element, location) {
       if (this.options.sourceCodeLocationInfo) {
         const loc = location && {
@@ -10481,20 +10325,28 @@ var _Sources = (() => {
         this.treeAdapter.appendChild(parent2, element);
       }
     }
+    /**
+     * For self-closing tags. Add an element to the tree, but skip adding it
+     * to the stack.
+     */
+    /** @protected */
     _appendElement(token, namespaceURI) {
       const element = this.treeAdapter.createElement(token.tagName, namespaceURI, token.attrs);
       this._attachElementToTree(element, token.location);
     }
+    /** @protected */
     _insertElement(token, namespaceURI) {
       const element = this.treeAdapter.createElement(token.tagName, namespaceURI, token.attrs);
       this._attachElementToTree(element, token.location);
       this.openElements.push(element, token.tagID);
     }
+    /** @protected */
     _insertFakeElement(tagName, tagID) {
       const element = this.treeAdapter.createElement(tagName, NS.HTML, []);
       this._attachElementToTree(element, null);
       this.openElements.push(element, tagID);
     }
+    /** @protected */
     _insertTemplate(token) {
       const tmpl = this.treeAdapter.createElement(token.tagName, NS.HTML, token.attrs);
       const content = this.treeAdapter.createDocumentFragment();
@@ -10504,6 +10356,7 @@ var _Sources = (() => {
       if (this.options.sourceCodeLocationInfo)
         this.treeAdapter.setNodeSourceCodeLocation(content, null);
     }
+    /** @protected */
     _insertFakeRootElement() {
       const element = this.treeAdapter.createElement(TAG_NAMES.HTML, NS.HTML, []);
       if (this.options.sourceCodeLocationInfo)
@@ -10511,6 +10364,7 @@ var _Sources = (() => {
       this.treeAdapter.appendChild(this.openElements.current, element);
       this.openElements.push(element, TAG_ID.HTML);
     }
+    /** @protected */
     _appendCommentNode(token, parent2) {
       const commentNode = this.treeAdapter.createCommentNode(token.data);
       this.treeAdapter.appendChild(parent2, commentNode);
@@ -10518,6 +10372,7 @@ var _Sources = (() => {
         this.treeAdapter.setNodeSourceCodeLocation(commentNode, token.location);
       }
     }
+    /** @protected */
     _insertCharacters(token) {
       let parent2;
       let beforeElement;
@@ -10545,12 +10400,14 @@ var _Sources = (() => {
         this.treeAdapter.setNodeSourceCodeLocation(textNode, token.location);
       }
     }
+    /** @protected */
     _adoptNodes(donor, recipient) {
       for (let child = this.treeAdapter.getFirstChild(donor); child; child = this.treeAdapter.getFirstChild(donor)) {
         this.treeAdapter.detachNode(child);
         this.treeAdapter.appendChild(recipient, child);
       }
     }
+    /** @protected */
     _setEndLocation(element, closingToken) {
       if (this.treeAdapter.getNodeSourceCodeLocation(element) && closingToken.location) {
         const ctLoc = closingToken.location;
@@ -10594,6 +10451,7 @@ var _Sources = (() => {
         (token.tagID === TAG_ID.MGLYPH || token.tagID === TAG_ID.MALIGNMARK) && !this._isIntegrationPoint(currentTagId, current, NS.HTML)
       );
     }
+    /** @protected */
     _processToken(token) {
       switch (token.type) {
         case TokenType.CHARACTER: {
@@ -10631,12 +10489,14 @@ var _Sources = (() => {
       }
     }
     //Integration points
+    /** @protected */
     _isIntegrationPoint(tid, element, foreignNS) {
       const ns = this.treeAdapter.getNamespaceURI(element);
       const attrs = this.treeAdapter.getAttrList(element);
       return isIntegrationPoint(tid, ns, attrs, foreignNS);
     }
     //Active formatting elements reconstruction
+    /** @protected */
     _reconstructActiveFormattingElements() {
       const listLength = this.activeFormattingElements.entries.length;
       if (listLength) {
@@ -10650,17 +10510,20 @@ var _Sources = (() => {
       }
     }
     //Close elements
+    /** @protected */
     _closeTableCell() {
       this.openElements.generateImpliedEndTags();
       this.openElements.popUntilTableCellPopped();
       this.activeFormattingElements.clearToLastMarker();
       this.insertionMode = InsertionMode.IN_ROW;
     }
+    /** @protected */
     _closePElement() {
       this.openElements.generateImpliedEndTagsWithExclusion(TAG_ID.P);
       this.openElements.popUntilTagNamePopped(TAG_ID.P);
     }
     //Insertion modes
+    /** @protected */
     _resetInsertionMode() {
       for (let i = this.openElements.stackTop; i >= 0; i--) {
         switch (i === 0 && this.fragmentContext ? this.fragmentContextID : this.openElements.tagIDs[i]) {
@@ -10725,6 +10588,7 @@ var _Sources = (() => {
       }
       this.insertionMode = InsertionMode.IN_BODY;
     }
+    /** @protected */
     _resetInsertionModeForSelect(selectIdx) {
       if (selectIdx > 0) {
         for (let i = selectIdx - 1; i > 0; i--) {
@@ -10740,12 +10604,15 @@ var _Sources = (() => {
       this.insertionMode = InsertionMode.IN_SELECT;
     }
     //Foster parenting
+    /** @protected */
     _isElementCausesFosterParenting(tn) {
       return TABLE_STRUCTURE_TAGS.has(tn);
     }
+    /** @protected */
     _shouldFosterParentOnInsertion() {
       return this.fosterParentingEnabled && this._isElementCausesFosterParenting(this.openElements.currentTagId);
     }
+    /** @protected */
     _findFosterParentingLocation() {
       for (let i = this.openElements.stackTop; i >= 0; i--) {
         const openElement = this.openElements.items[i];
@@ -10768,6 +10635,7 @@ var _Sources = (() => {
       }
       return { parent: this.openElements.items[0], beforeElement: null };
     }
+    /** @protected */
     _fosterParentElement(element) {
       const location = this._findFosterParentingLocation();
       if (location.beforeElement) {
@@ -10777,10 +10645,12 @@ var _Sources = (() => {
       }
     }
     //Special elements
+    /** @protected */
     _isSpecialElement(element, id) {
       const ns = this.treeAdapter.getNamespaceURI(element);
       return SPECIAL_ELEMENTS[ns].has(id);
     }
+    /** @internal */
     onCharacter(token) {
       this.skipNextNewLine = false;
       if (this.tokenizer.inForeignNode) {
@@ -10850,6 +10720,7 @@ var _Sources = (() => {
         default:
       }
     }
+    /** @internal */
     onNullCharacter(token) {
       this.skipNextNewLine = false;
       if (this.tokenizer.inForeignNode) {
@@ -10906,6 +10777,7 @@ var _Sources = (() => {
         default:
       }
     }
+    /** @internal */
     onComment(token) {
       this.skipNextNewLine = false;
       if (this.currentNotInHTML) {
@@ -10950,6 +10822,7 @@ var _Sources = (() => {
         default:
       }
     }
+    /** @internal */
     onDoctype(token) {
       this.skipNextNewLine = false;
       switch (this.insertionMode) {
@@ -10971,6 +10844,7 @@ var _Sources = (() => {
         default:
       }
     }
+    /** @internal */
     onStartTag(token) {
       this.skipNextNewLine = false;
       this.currentToken = token;
@@ -10988,6 +10862,7 @@ var _Sources = (() => {
      * for nested calls.
      *
      * @param token The token to process.
+     * @protected
      */
     _processStartTag(token) {
       if (this.shouldProcessStartTagTokenInForeignContent(token)) {
@@ -10996,6 +10871,7 @@ var _Sources = (() => {
         this._startTagOutsideForeignContent(token);
       }
     }
+    /** @protected */
     _startTagOutsideForeignContent(token) {
       switch (this.insertionMode) {
         case InsertionMode.INITIAL: {
@@ -11089,6 +10965,7 @@ var _Sources = (() => {
         default:
       }
     }
+    /** @internal */
     onEndTag(token) {
       this.skipNextNewLine = false;
       this.currentToken = token;
@@ -11098,6 +10975,7 @@ var _Sources = (() => {
         this._endTagOutsideForeignContent(token);
       }
     }
+    /** @protected */
     _endTagOutsideForeignContent(token) {
       switch (this.insertionMode) {
         case InsertionMode.INITIAL: {
@@ -11191,6 +11069,7 @@ var _Sources = (() => {
         default:
       }
     }
+    /** @internal */
     onEof(token) {
       switch (this.insertionMode) {
         case InsertionMode.INITIAL: {
@@ -11252,6 +11131,7 @@ var _Sources = (() => {
         default:
       }
     }
+    /** @internal */
     onWhitespaceCharacter(token) {
       if (this.skipNextNewLine) {
         this.skipNextNewLine = false;
@@ -11783,7 +11663,7 @@ var _Sources = (() => {
     if (p.openElements.hasInButtonScope(TAG_ID.P)) {
       p._closePElement();
     }
-    if (isNumberedHeader(p.openElements.currentTagId)) {
+    if (NUMBERED_HEADERS.has(p.openElements.currentTagId)) {
       p.openElements.pop();
     }
     p._insertElement(token, NS.HTML);
@@ -11937,7 +11817,7 @@ var _Sources = (() => {
     p.framesetOk = false;
     p._switchToTextParsing(token, TokenizerMode.RAWTEXT);
   }
-  function noembedStartTagInBody(p, token) {
+  function rawTextStartTagInBody(p, token) {
     p._switchToTextParsing(token, TokenizerMode.RAWTEXT);
   }
   function selectStartTagInBody(p, token) {
@@ -12040,6 +11920,7 @@ var _Sources = (() => {
       case TAG_ID.DETAILS:
       case TAG_ID.ADDRESS:
       case TAG_ID.ARTICLE:
+      case TAG_ID.SEARCH:
       case TAG_ID.SECTION:
       case TAG_ID.SUMMARY:
       case TAG_ID.FIELDSET:
@@ -12163,8 +12044,9 @@ var _Sources = (() => {
         optgroupStartTagInBody(p, token);
         break;
       }
-      case TAG_ID.NOEMBED: {
-        noembedStartTagInBody(p, token);
+      case TAG_ID.NOEMBED:
+      case TAG_ID.NOFRAMES: {
+        rawTextStartTagInBody(p, token);
         break;
       }
       case TAG_ID.FRAMESET: {
@@ -12177,7 +12059,7 @@ var _Sources = (() => {
       }
       case TAG_ID.NOSCRIPT: {
         if (p.options.scriptingEnabled) {
-          noembedStartTagInBody(p, token);
+          rawTextStartTagInBody(p, token);
         } else {
           genericStartTagInBody(p, token);
         }
@@ -12343,6 +12225,7 @@ var _Sources = (() => {
       case TAG_ID.ADDRESS:
       case TAG_ID.ARTICLE:
       case TAG_ID.DETAILS:
+      case TAG_ID.SEARCH:
       case TAG_ID.SECTION:
       case TAG_ID.SUMMARY:
       case TAG_ID.LISTING:
@@ -12911,6 +12794,17 @@ var _Sources = (() => {
         p._insertElement(token, NS.HTML);
         break;
       }
+      case TAG_ID.HR: {
+        if (p.openElements.currentTagId === TAG_ID.OPTION) {
+          p.openElements.pop();
+        }
+        if (p.openElements.currentTagId === TAG_ID.OPTGROUP) {
+          p.openElements.pop();
+        }
+        p._appendElement(token, NS.HTML);
+        token.ackSelfClosing = true;
+        break;
+      }
       case TAG_ID.INPUT:
       case TAG_ID.KEYGEN:
       case TAG_ID.TEXTAREA:
@@ -13271,9 +13165,7 @@ var _Sources = (() => {
     let html3 = "";
     for (const attr2 of treeAdapter.getAttrList(node)) {
       html3 += " ";
-      if (!attr2.namespace) {
-        html3 += attr2.name;
-      } else
+      if (attr2.namespace) {
         switch (attr2.namespace) {
           case NS.XML: {
             html3 += `xml:${attr2.name}`;
@@ -13294,6 +13186,9 @@ var _Sources = (() => {
             html3 += `${attr2.prefix}:${attr2.name}`;
           }
         }
+      } else {
+        html3 += attr2.name;
+      }
       html3 += `="${escapeAttribute(attr2.value)}"`;
     }
     return html3;
@@ -13328,9 +13223,6 @@ var _Sources = (() => {
   }
 
   // node_modules/parse5-htmlparser2-tree-adapter/dist/index.js
-  function createTextNode2(value) {
-    return new Text2(value);
-  }
   function enquoteDoctypeId(id) {
     const quote = id.includes('"') ? "'" : '"';
     return quote + id + quote;
@@ -13383,6 +13275,9 @@ var _Sources = (() => {
     createCommentNode(data2) {
       return new Comment2(data2);
     },
+    createTextNode(value) {
+      return new Text2(value);
+    },
     //Tree mutation
     appendChild(parentNode, newNode) {
       const prev2 = parentNode.children[parentNode.children.length - 1];
@@ -13420,9 +13315,9 @@ var _Sources = (() => {
         doctypeNode = new ProcessingInstruction("!doctype", data2);
         adapter.appendChild(document, doctypeNode);
       }
-      doctypeNode["x-name"] = name !== null && name !== void 0 ? name : void 0;
-      doctypeNode["x-publicId"] = publicId !== null && publicId !== void 0 ? publicId : void 0;
-      doctypeNode["x-systemId"] = systemId !== null && systemId !== void 0 ? systemId : void 0;
+      doctypeNode["x-name"] = name;
+      doctypeNode["x-publicId"] = publicId;
+      doctypeNode["x-systemId"] = systemId;
     },
     setDocumentMode(document, mode) {
       document["x-mode"] = mode;
@@ -13451,7 +13346,7 @@ var _Sources = (() => {
       if (lastChild && isText(lastChild)) {
         lastChild.data += text3;
       } else {
-        adapter.appendChild(parentNode, createTextNode2(text3));
+        adapter.appendChild(parentNode, adapter.createTextNode(text3));
       }
     },
     insertTextBefore(parentNode, text3, referenceNode) {
@@ -13459,13 +13354,13 @@ var _Sources = (() => {
       if (prevNode && isText(prevNode)) {
         prevNode.data += text3;
       } else {
-        adapter.insertBefore(parentNode, createTextNode2(text3), referenceNode);
+        adapter.insertBefore(parentNode, adapter.createTextNode(text3), referenceNode);
       }
     },
     adoptAttributes(recipient, attrs) {
       for (let i = 0; i < attrs.length; i++) {
         const attrName = attrs[i].name;
-        if (typeof recipient.attribs[attrName] === "undefined") {
+        if (recipient.attribs[attrName] === void 0) {
           recipient.attribs[attrName] = attrs[i].value;
           recipient["x-attribsNamespace"][attrName] = attrs[i].namespace;
           recipient["x-attribsPrefix"][attrName] = attrs[i].prefix;
