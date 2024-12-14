@@ -14683,7 +14683,7 @@ var _Sources = (() => {
     for (const img of $2("img.imgholder").toArray()) {
       let image = $2(img).attr("src") ?? "";
       if (!image) image = $2(img).attr("data-src") ?? "";
-      if (!image) continue;
+      if (!image || !$2(img).attr("alt")?.length) continue;
       pages.push(encodeURI(image));
     }
     return App.createChapterDetails({
@@ -14850,7 +14850,7 @@ var _Sources = (() => {
   // src/MangaDemon/MangaDemon.ts
   var MD_DOMAIN = "https://demonicscans.org";
   var MangaDemonInfo = {
-    version: "1.1.2",
+    version: "1.1.3",
     name: "MangaDemon",
     icon: "icon.png",
     author: "Netsky",

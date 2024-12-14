@@ -14724,7 +14724,7 @@ var _Sources = (() => {
       const image = $2("img", manga).first().attr("src") ?? "";
       const title = $2("img", manga).first().attr("alt") ?? "";
       const id = $2("a", manga).attr("href")?.replace(/\/$/, "")?.split("/").pop() ?? "";
-      const subtitle = $2("a.name-chapter", manga).text().trim() ?? "";
+      const subtitle = $2("a.name-chapter > span", manga).text().trim() ?? "";
       if (!id || !title) continue;
       recommendSection_Array.push(App.createPartialSourceManga({
         image,
@@ -14740,7 +14740,7 @@ var _Sources = (() => {
       const image = $2("img", manga).first().attr("src") ?? "";
       const title = $2("img", manga).first().attr("alt") ?? "";
       const id = $2("a", manga).attr("href")?.replace(/\/$/, "")?.split("/").pop() ?? "";
-      const subtitle = $2("a.name-chapter", manga).text().trim() ?? "";
+      const subtitle = $2("a.name-chapter > span", manga).text().trim() ?? "";
       if (!id || !title) continue;
       updateSection_Array.push(App.createPartialSourceManga({
         image,
@@ -14756,7 +14756,7 @@ var _Sources = (() => {
       const image = $2("img", manga).first().attr("src") ?? "";
       const title = $2("img", manga).first().attr("alt") ?? "";
       const id = $2("a", manga).attr("href")?.replace(/\/$/, "")?.split("/").pop() ?? "";
-      const subtitle = $2("a.name-chapter", manga).text()?.replace("Read online", "").trim() ?? "";
+      const subtitle = $2("a.name-chapter > span", manga).text()?.replace("Read online", "").trim() ?? "";
       if (!id || !title) continue;
       viewedTodaySection_Array.push(App.createPartialSourceManga({
         image,
@@ -14775,7 +14775,7 @@ var _Sources = (() => {
       const image = $2("img", obj).first().attr("src") ?? "";
       const title = $2("img", obj).first().attr("alt") ?? "";
       const id = $2("a", obj).attr("href")?.replace(/\/$/, "")?.split("/").pop() ?? "";
-      const subtitle = $2("a.name-chapter", obj).text()?.replace("Read online", "").trim() ?? "";
+      const subtitle = $2("a.name-chapter > span", obj).text()?.replace("Read online", "").trim() ?? "";
       if (!id || !title || collectedIds.includes(id)) continue;
       manga.push(App.createPartialSourceManga({
         image,
@@ -14811,7 +14811,7 @@ var _Sources = (() => {
   // src/MangaHasu/MangaHasu.ts
   var MH_DOMAIN = "https://mangahasu.me";
   var MangaHasuInfo = {
-    version: "2.0.6",
+    version: "2.0.7",
     name: "MangaHasu",
     icon: "icon.png",
     author: "Netsky",

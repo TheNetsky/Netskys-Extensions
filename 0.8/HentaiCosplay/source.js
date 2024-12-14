@@ -14668,15 +14668,6 @@ var _Sources = (() => {
           type: import_types2.HomeSectionType.singleRowLarge
         }),
         selector: $2("ul#image-list").get(1)
-      },
-      {
-        sectionID: App.createHomeSection({
-          id: "recently_viewed",
-          title: "Recently Viewed Galleries",
-          containsMoreItems: true,
-          type: import_types2.HomeSectionType.singleRowLarge
-        }),
-        selector: $2("ul#image-list").get(0)
       }
     ];
     const collectedIds = [];
@@ -14739,7 +14730,7 @@ var _Sources = (() => {
   // src/HentaiCosplay/HentaiCosplay.ts
   var HC_DOMAIN = "https://hentai-cosplay-xxx.com";
   var HentaiCosplayInfo = {
-    version: "1.1.2",
+    version: "1.1.3",
     name: "HentaiCosplay",
     icon: "icon.png",
     author: "Netsky",

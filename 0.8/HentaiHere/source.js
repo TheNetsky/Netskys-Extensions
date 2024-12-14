@@ -1032,7 +1032,7 @@ var _Sources = (() => {
     newestSection.items = newestSection_Array;
     sectionCallback(newestSection);
     const trendingSection_Array = [];
-    for (const manga of $2($2("ul.list-group")[1]).children("li.list-group-item").toArray()) {
+    for (const manga of $2($2("div.row.row-sm")[1]).children("div").toArray()) {
       const image = $2("img", manga).attr("src") ?? "";
       const title = $2("img", manga).attr("alt")?.trim() ?? "";
       const id = $2("a", manga).attr("href")?.split("/").pop()?.trim();

@@ -14606,7 +14606,7 @@ var _Sources = (() => {
   var import_html_entities = __toESM(require_lib2());
   var parseMangaDetails = ($2, mangaId) => {
     const images = parseImages($2);
-    const title = (0, import_html_entities.decode)($2("h1.entry-title").first().text().trim());
+    const title = (0, import_html_entities.decode)($2("h1.cm-entry-title").first().text().trim());
     const artist = (0, import_html_entities.decode)($2("p:contains(Cosplayer:)").text().trim().replace("Cosplayer:", "").trim());
     const description = `Cosplayer: ${artist}
 
@@ -14653,13 +14653,13 @@ Images: ${images.length}`;
   var parseHomeSections = ($2) => {
     const collectedIds = [];
     const itemArray = [];
-    for (const item of $2("article", "div#content").toArray()) {
+    for (const item of $2("article", "div#cm-primary").toArray()) {
       const postId = $2(item).attr("id");
       const id = postId?.split("post-").pop();
       const image = getImageSrc($2("img", item).first()) ?? "";
-      const title = $2("h2.entry-title", item).text().trim();
-      const subtitle = $2("span.tag-links > a", item).toArray().map((x) => $2(x).text().trim()).join(", ");
-      if (!id || isNaN(Number(id)) || !title || collectedIds.includes(id)) continue;
+      const title = $2("h2.cm-entry-title", item).text().trim() ?? "";
+      const subtitle = $2("span.cm-tag-links > a", item).toArray().map((x) => $2(x).text().trim()).join(", ");
+      if (!id || isNaN(Number(id)) || !title || collectedIds.includes(id) || !subtitle) continue;
       itemArray.push(App.createPartialSourceManga({
         image: encodeURI(image),
         title: (0, import_html_entities.decode)(title),
@@ -14708,7 +14708,7 @@ Images: ${images.length}`;
   // src/Mitaku/Mitaku.ts
   var MT_DOMAIN = "https://mitaku.net";
   var MitakuInfo = {
-    version: "1.0.3",
+    version: "1.0.4",
     name: "Mitaku",
     icon: "icon.png",
     author: "Netsky",
