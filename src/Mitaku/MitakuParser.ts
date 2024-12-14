@@ -19,7 +19,7 @@ import { type Element } from 'domhandler'
 export const parseMangaDetails = ($: CheerioAPI, mangaId: string): SourceManga => {
     const images = parseImages($)
 
-    const title = decodeHTMLEntity($('h1.entry-title').first().text().trim())
+    const title = decodeHTMLEntity($('h1.cm-entry-title').first().text().trim())
     const artist = decodeHTMLEntity($('p:contains(Cosplayer:)').text().trim().replace('Cosplayer:', '').trim())
     const description = `Cosplayer: ${artist}\n\nGallery: ${title}\n\nImages: ${images.length}`
 
@@ -70,14 +70,14 @@ export const parseHomeSections = ($: CheerioAPI): PartialSourceManga[] => {
     const collectedIds: string[] = []
     const itemArray: PartialSourceManga[] = []
 
-    for (const item of $('article', 'div#content').toArray()) {
+    for (const item of $('article', 'div#cm-primary').toArray()) {
         const postId = $(item).attr('id')
         const id = postId?.split('post-').pop()
         const image: string = getImageSrc($('img', item).first()) ?? ''
-        const title: string = $('h2.entry-title', item).text().trim()
-        const subtitle: string = $('span.tag-links > a', item).toArray().map(x => $(x).text().trim()).join(', ')
+        const title: string = $('h2.cm-entry-title', item).text().trim() ?? ''
+        const subtitle: string = $('span.cm-tag-links > a', item).toArray().map(x => $(x).text().trim()).join(', ')
 
-        if (!id || isNaN(Number(id)) || !title || collectedIds.includes(id)) continue
+        if (!id || isNaN(Number(id)) || !title || collectedIds.includes(id) || !subtitle) continue
         itemArray.push(App.createPartialSourceManga({
             image: encodeURI(image),
             title: decodeHTMLEntity(title),

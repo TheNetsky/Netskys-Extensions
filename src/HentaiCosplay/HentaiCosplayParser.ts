@@ -85,15 +85,6 @@ export const parseHomeSections = ($: CheerioAPI, sectionCallback: (section: Home
                 type: HomeSectionType.singleRowLarge
             }),
             selector: $('ul#image-list').get(1)
-        },
-        {
-            sectionID: App.createHomeSection({
-                id: 'recently_viewed',
-                title: 'Recently Viewed Galleries',
-                containsMoreItems: true,
-                type: HomeSectionType.singleRowLarge
-            }),
-            selector: $('ul#image-list').get(0)
         }
     ]
 

@@ -155,7 +155,7 @@ export const parseHomeSections = ($: CheerioAPI, sectionCallback: (section: Home
         const image: string = $('img', manga).first().attr('src') ?? ''
         const title: string = $('img', manga).first().attr('alt') ?? ''
         const id = $('a', manga).attr('href')?.replace(/\/$/, '')?.split('/').pop() ?? ''
-        const subtitle: string = $('a.name-chapter', manga).text().trim() ?? ''
+        const subtitle: string = $('a.name-chapter > span', manga).text().trim() ?? ''
 
         if (!id || !title) continue
         recommendSection_Array.push(App.createPartialSourceManga({
@@ -174,7 +174,7 @@ export const parseHomeSections = ($: CheerioAPI, sectionCallback: (section: Home
         const image: string = $('img', manga).first().attr('src') ?? ''
         const title: string = $('img', manga).first().attr('alt') ?? ''
         const id = $('a', manga).attr('href')?.replace(/\/$/, '')?.split('/').pop() ?? ''
-        const subtitle: string = $('a.name-chapter', manga).text().trim() ?? ''
+        const subtitle: string = $('a.name-chapter > span', manga).text().trim() ?? ''
 
         if (!id || !title) continue
         updateSection_Array.push(App.createPartialSourceManga({
@@ -193,7 +193,7 @@ export const parseHomeSections = ($: CheerioAPI, sectionCallback: (section: Home
         const image: string = $('img', manga).first().attr('src') ?? ''
         const title: string = $('img', manga).first().attr('alt') ?? ''
         const id = $('a', manga).attr('href')?.replace(/\/$/, '')?.split('/').pop() ?? ''
-        const subtitle: string = $('a.name-chapter', manga).text()?.replace('Read online', '').trim() ?? ''
+        const subtitle: string = $('a.name-chapter > span', manga).text()?.replace('Read online', '').trim() ?? ''
 
         if (!id || !title) continue
         viewedTodaySection_Array.push(App.createPartialSourceManga({
@@ -215,7 +215,7 @@ export const parseViewMore = ($: CheerioAPI): PartialSourceManga[] => {
         const image: string = $('img', obj).first().attr('src') ?? ''
         const title: string = $('img', obj).first().attr('alt') ?? ''
         const id = $('a', obj).attr('href')?.replace(/\/$/, '')?.split('/').pop() ?? ''
-        const subtitle: string = $('a.name-chapter', obj).text()?.replace('Read online', '').trim() ?? ''
+        const subtitle: string = $('a.name-chapter > span', obj).text()?.replace('Read online', '').trim() ?? ''
 
         if (!id || !title || collectedIds.includes(id)) continue
         manga.push(App.createPartialSourceManga({

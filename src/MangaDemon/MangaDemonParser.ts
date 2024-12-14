@@ -106,7 +106,8 @@ export const parseChapterDetails = async ($: CheerioAPI, mangaId: string, chapte
     for (const img of $('img.imgholder').toArray()) {
         let image = $(img).attr('src') ?? ''
         if (!image) image = $(img).attr('data-src') ?? ''
-        if (!image) continue
+        
+        if (!image || !$(img).attr('alt')?.length) continue
         pages.push(encodeURI(image))
     }
 

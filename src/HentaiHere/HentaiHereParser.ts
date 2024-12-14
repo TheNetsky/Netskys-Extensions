@@ -174,7 +174,7 @@ export const parseHomeSections = ($: CheerioAPI, sectionCallback: (section: Home
 
     // Trending
     const trendingSection_Array: PartialSourceManga[] = []
-    for (const manga of $($('ul.list-group')[1]).children('li.list-group-item').toArray()) {
+    for (const manga of $($('div.row.row-sm')[1]).children('div').toArray()) {
         const image = $('img', manga).attr('src') ?? ''
         const title = $('img', manga).attr('alt')?.trim() ?? ''
         const id = $('a', manga).attr('href')?.split('/').pop()?.trim()
