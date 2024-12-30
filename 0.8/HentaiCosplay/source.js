@@ -924,6 +924,7 @@ var _Sources = (() => {
     getChildren: () => getChildren,
     getElementById: () => getElementById,
     getElements: () => getElements,
+    getElementsByClassName: () => getElementsByClassName,
     getElementsByTagName: () => getElementsByTagName,
     getElementsByTagType: () => getElementsByTagType,
     getFeed: () => getFeed,
@@ -2322,7 +2323,7 @@ var _Sources = (() => {
   }
   function find(test, nodes, recurse, limit) {
     const result = [];
-    const nodeStack = [nodes];
+    const nodeStack = [Array.isArray(nodes) ? nodes : [nodes]];
     const indexStack = [0];
     for (; ; ) {
       if (indexStack[0] >= nodeStack[0].length) {
@@ -2349,25 +2350,24 @@ var _Sources = (() => {
     return nodes.find(test);
   }
   function findOne(test, nodes, recurse = true) {
-    let elem = null;
-    for (let i = 0; i < nodes.length && !elem; i++) {
-      const node = nodes[i];
-      if (!isTag2(node)) {
-        continue;
-      } else if (test(node)) {
-        elem = node;
-      } else if (recurse && node.children.length > 0) {
-        elem = findOne(test, node.children, true);
+    const searchedNodes = Array.isArray(nodes) ? nodes : [nodes];
+    for (let i = 0; i < searchedNodes.length; i++) {
+      const node = searchedNodes[i];
+      if (isTag2(node) && test(node)) {
+        return node;
+      }
+      if (recurse && hasChildren(node) && node.children.length > 0) {
+        return findOne(test, node.children, true);
       }
     }
-    return elem;
+    return null;
   }
   function existsOne(test, nodes) {
-    return nodes.some((checked) => isTag2(checked) && (test(checked) || existsOne(test, checked.children)));
+    return (Array.isArray(nodes) ? nodes : [nodes]).some((node) => isTag2(node) && test(node) || hasChildren(node) && existsOne(test, node.children));
   }
   function findAll(test, nodes) {
     const result = [];
-    const nodeStack = [nodes];
+    const nodeStack = [Array.isArray(nodes) ? nodes : [nodes]];
     const indexStack = [0];
     for (; ; ) {
       if (indexStack[0] >= nodeStack[0].length) {
@@ -2379,11 +2379,9 @@ var _Sources = (() => {
         continue;
       }
       const elem = nodeStack[0][indexStack[0]++];
-      if (!isTag2(elem))
-        continue;
-      if (test(elem))
+      if (isTag2(elem) && test(elem))
         result.push(elem);
-      if (elem.children.length > 0) {
+      if (hasChildren(elem) && elem.children.length > 0) {
         indexStack.unshift(0);
         nodeStack.unshift(elem.children);
       }
@@ -2444,6 +2442,9 @@ var _Sources = (() => {
   }
   function getElementsByTagName(tagName, nodes, recurse = true, limit = Infinity) {
     return filter(Checks["tag_name"](tagName), nodes, recurse, limit);
+  }
+  function getElementsByClassName(className, nodes, recurse = true, limit = Infinity) {
+    return filter(getAttribCheck("class", className), nodes, recurse, limit);
   }
   function getElementsByTagType(type, nodes, recurse = true, limit = Infinity) {
     return filter(Checks["tag_type"](type), nodes, recurse, limit);
@@ -14730,7 +14731,7 @@ var _Sources = (() => {
   // src/HentaiCosplay/HentaiCosplay.ts
   var HC_DOMAIN = "https://hentai-cosplay-xxx.com";
   var HentaiCosplayInfo = {
-    version: "1.1.3",
+    version: "1.1.4",
     name: "HentaiCosplay",
     icon: "icon.png",
     author: "Netsky",
@@ -14757,7 +14758,7 @@ var _Sources = (() => {
               ...request.headers ?? {},
               ...{
                 "referer": `${HC_DOMAIN}/`,
-                "user-agent": await this.requestManager.getDefaultUserAgent()
+                "user-agent": (await this.requestManager.getDefaultUserAgent()).replace(/iPhone/i, "iPad")
               }
             };
             request.url = request.url.replace(/^http:/, "https:");
@@ -14880,7 +14881,7 @@ Please go to the homepage of <${_HentaiCosplay.name}> and press the cloud icon.`
         method: "GET",
         headers: {
           "referer": `${HC_DOMAIN}/`,
-          "user-agent": await this.requestManager.getDefaultUserAgent()
+          "user-agent": (await this.requestManager.getDefaultUserAgent()).replace(/iPhone/i, "iPad")
         }
       });
     }
